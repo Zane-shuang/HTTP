@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器测试页面</title>
+    <link rel="stylesheet" href="/test.css">
+</head>
+<body>
+    <div class="container">
+        <h1>服务器功能测试</h1>
+
+        <h2>1. 静态文件测试</h2>
+        <p>这个页面引用了 <code>/test.css</code> 样式文件，如果页面背景是浅蓝色，说明静态文件服务正常工作。</p>
+
+        <h2>2. 404错误测试</h2>
+        <p><a href="/nonexistent-page">访问不存在的页面</a>，应该显示404错误页面。</p>
+
+        <h2>3. POST请求测试</h2>
+        <form action="/submit" method="post">
+            <div>
+                <label for="name">姓名:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div>
+                <label for="message">留言:</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit">提交</button>
+        </form>
+
+        <h2>4. 并发请求测试</h2>
+        <p>可以使用以下curl命令在终端测试并发请求：</p>
+        <pre>for i in {1..10}; do curl -s http://localhost:8080 > /dev/null & done</pre>
+        <p>这个命令会同时发送10个请求到服务器。</p>
+    </div>
+</body>
+</html>
