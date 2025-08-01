@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/epoll.h>
+#include <future>
 #include <unordered_map>
 
 // 线程池类
