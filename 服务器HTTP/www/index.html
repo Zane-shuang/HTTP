@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>轻量级HTTP服务器</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .feature-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .feature-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        .feature-list li:before {
+            content: '✓';
+            color: #27ae60;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>轻量级多线程HTTP服务器</h1>
+        <p>欢迎使用基于Linux的轻量级多线程HTTP服务器！这是一个简洁高效的服务器实现，具有以下特点：</p>
+        <ul class="feature-list">
+            <li>多线程处理，使用线程池优化性能</li>
+            <li>非阻塞I/O，提高并发处理能力</li>
+            <li>支持静态文件服务</li>
+            <li>简单的路由机制</li>
+            <li>轻量级设计，资源占用少</li>
+        </ul>
+        <p>服务器运行在端口 <strong>8080</strong>，可以通过命令行参数指定其他端口。</p>
+        <div class="footer">
+            <p>© 2025 轻量级HTTP服务器 - 使用C++实现</p>
+        </div>
+    </div>
+</body>
+</html>
