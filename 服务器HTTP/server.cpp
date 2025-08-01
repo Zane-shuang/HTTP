@@ -19,7 +19,10 @@ ThreadPool::ThreadPool(size_t threads) : stop(false) {
                     this->tasks.pop();
                 }
 
+                // 调试日志：开始执行任务
+                std::cout << "线程池执行任务开始" << std::endl;
                 task();
+                std::cout << "线程池执行任务结束" << std::endl;
             }
         });
     }
@@ -80,6 +83,9 @@ bool HttpRequest::parse(const std::string& request) {
     if (query_pos != std::string::npos) {
         path = path.substr(0, query_pos);
     }
+
+    // 调试日志：输出解析后的请求方法和路径
+    std::cout << "解析到请求: 方法=" << method << ", 路径=" << path << std::endl;
 
     // 解析请求头
     while (std::getline(iss, line) && line != "\r") {
@@ -149,6 +155,54 @@ HttpServer::HttpServer(int port) : port_(port), running_(false) {
     // 注册默认路由
     addRoute("/", [this](const HttpRequest& request, HttpResponse& response) {
         this->defaultHandler(request, response);
+    });
+
+    // 注册处理表单提交的路由
+    addRoute("/submit", [this](const HttpRequest& request, HttpResponse& response) {
+        // 检查请求方法是否为POST
+        if (request.method == "POST") {
+            // 解析表单数据
+            std::string name, message;
+            size_t pos = request.body.find("name=");
+            if (pos != std::string::npos) {
+                pos += 5; // 跳过 "name="
+                size_t end_pos = request.body.find("&", pos);
+                if (end_pos != std::string::npos) {
+                    name = request.body.substr(pos, end_pos - pos);
+                    // 简单的URL解码
+                    while ((pos = name.find("%20")) != std::string::npos) {
+                        name.replace(pos, 3, " ");
+                    }
+                }
+            }
+
+            pos = request.body.find("message=");
+            if (pos != std::string::npos) {
+                pos += 8; // 跳过 "message="
+                message = request.body.substr(pos);
+                // 简单的URL解码
+                while ((pos = message.find("%20")) != std::string::npos) {
+                    message.replace(pos, 3, " ");
+                }
+                while ((pos = message.find("%0A")) != std::string::npos) {
+                    message.replace(pos, 3, "\n");
+                }
+            }
+
+            // 生成响应
+            response.status_code = 200;
+            response.status_message = "OK";
+            response.body = "<html><body><h1>提交成功!</h1>";
+            response.body += "<p>姓名: " + name + "</p>";
+            response.body += "<p>留言: " + message + "</p>";
+            response.body += "<p><a href='/test.html'>返回测试页面</a></p>";
+            response.body += "</body></html>";
+        } else {
+            // 如果不是POST请求，返回405 Method Not Allowed
+            response.status_code = 405;
+            response.status_message = "Method Not Allowed";
+            response.body = "<html><body><h1>405 Method Not Allowed</h1></body></html>";
+        }
     });
 }
 
@@ -337,11 +391,18 @@ void HttpServer::handleRequest(int client_fd) {
     HttpResponse response;
     response.version = "HTTP/1.1";
 
+    // 调试日志：输出查找的路由路径
+    std::cout << "查找路由: " << request.path << std::endl;
+
     auto it = routes_.find(request.path);
     if (it != routes_.end()) {
+        // 调试日志：找到路由
+        std::cout << "找到路由: " << request.path << std::endl;
         // 调用路由处理函数
         it->second(request, response);
     } else {
+        // 调试日志：未找到路由
+        std::cout << "未找到路由: " << request.path << std::endl;
         // 默认处理
         defaultHandler(request, response);
     }
@@ -382,6 +443,9 @@ void HttpServer::defaultHandler(const HttpRequest& request, HttpResponse& respon
     if (request.path == "/") {
         file_path += "index.html";
     }
+
+    // 调试日志：输出尝试打开的文件路径
+    std::cout << "尝试打开文件: " << file_path << std::endl;
 
     std::ifstream file(file_path, std::ios::binary);
     if (file.good()) {
