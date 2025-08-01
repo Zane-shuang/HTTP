@@ -75,6 +75,12 @@ bool HttpRequest::parse(const std::string& request) {
     std::istringstream request_line(line);
     request_line >> method >> path >> version;
 
+    // 去除路径中的查询参数
+    size_t query_pos = path.find('?');
+    if (query_pos != std::string::npos) {
+        path = path.substr(0, query_pos);
+    }
+
     // 解析请求头
     while (std::getline(iss, line) && line != "\r") {
         if (line.empty()) continue;
